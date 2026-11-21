@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golden Hour Planner — Philmography · Singapore</title>
+<meta name="description" content="Plan the perfect light for your portrait shoot in Singapore. Golden hour, blue hour, sunrise and sunset — computed for Singapore, with a 7-day outlook and weather-aware shoot scores. By Philmography.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="#">Philmography<span> · Golden Hour</span></a>
+    <div class="nav-links">
+      <a href="#today">Today</a>
+      <a href="#week">7-day outlook</a>
+      <a href="#places">Places</a>
+      <a href="#plan" class="cta">Plan a shoot</a>
+      <a href="https://claireaicodes.github.io/philmography-shoot-tracker/" class="quiet">Book a shoot →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Singapore · 1.35° N — the light changes fast near the equator</p>
+    <h1>Chase the <em>golden hour,</em><br>not the clock.</h1>
+    <p class="lede">Sunrise and sunset in Singapore barely move all year — but golden hour is short, about 40 minutes, and the best colour often comes with a little cloud. This planner works out the light for any day, scores the weather, and helps you pick the window.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#plan">Plan a shoot</a>
+      <a class="btn ghost" href="#week">See the 7-day outlook</a>
+    </div>
+    <p class="hero-note">Sun times are computed in your browser (NOAA solar algorithm) for Singapore — no account, no tracking. Weather from Open-Meteo.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="today" aria-labelledby="today-h">
+    <div class="section-head">
+      <p class="kicker">Today</p>
+      <h2 id="today-h">Today's light in Singapore</h2>
+      <p id="today-date">Loading…</p>
+    </div>
+
+    <div class="today-grid">
+      <div class="card highlight">
+        <p class="card-label">Best window today</p>
+        <p class="big-window" id="best-window">—</p>
+        <p class="muted" id="best-window-note">—</p>
+      </div>
+      <div class="card">
+        <p class="card-label">Sunrise · Sunset</p>
+        <p class="sun-times"><span id="sunrise">—</span> <span class="arrow">→</span> <span id="sunset">—</span></p>
+        <p class="muted">Day length <b id="day-length">—</b></p>
+      </div>
+    </div>
+
+    <div class="card timeline-card">
+      <p class="card-label">Light timeline — today</p>
+      <div class="timeline" id="timeline" aria-label="Light timeline for today"></div>
+      <div class="legend">
+        <span><i class="sw night"></i>Night</span>
+        <span><i class="sw blue"></i>Blue hour</span>
+        <span><i class="sw golden"></i>Golden hour</span>
+        <span><i class="sw day"></i>Daylight</span>
+        <span class="now-marker-note" id="now-note"></span>
+      </div>
+    </div>
+
+    <div class="windows" id="windows"><!-- filled by JS --></div>
+  </section>
+
+  <section id="week" aria-labelledby="week-h">
+    <div class="section-head">
+      <p class="kicker">7-day outlook</p>
+      <h2 id="week-h">Golden hour, all week</h2>
+      <p>Morning and evening golden hour for the next 7 days, with cloud and rain outlook for each window. Score: <b>Great</b> means clear-ish skies and low rain chance; <b>Good</b> means workable light; <b>Risky</b> means rain is likely — bring a sheltered backup spot.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="week-table" id="week-table">
+        <thead>
+          <tr><th>Day</th><th>Sunrise</th><th>Morning golden</th><th>Evening golden</th><th>Sunset</th><th>Cloud / rain</th><th>Score</th><th></th></tr>
+        </thead>
+        <tbody id="week-body">
+          <tr><td colspan="8" class="muted">Computing sun times…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="fineprint" id="weather-note">Weather loading…</p>
+  </section>
+
+  <section id="places" aria-labelledby="places-h">
+    <div class="section-head">
+      <p class="kicker">Places</p>
+      <h2 id="places-h">Where the light works hardest</h2>
+      <p>Phil's picks around Singapore, with the window each place suits best. Tap one to use it in the planner below.</p>
+    </div>
+    <div class="places" id="places"><!-- filled by JS --></div>
+    <p class="venue-note"><b>Free in public spaces.</b> All of these are public spots, so a shoot here costs nothing but the light. A studio or venue is booked at your own cost — see the <a href="https://claireaicodes.github.io/philmography-shoot-tracker/">Philmography booking page</a>.</p>
+  </section>
+
+  <section id="plan" aria-labelledby="plan-h">
+    <div class="section-head">
+      <p class="kicker">Plan a shoot</p>
+      <h2 id="plan-h">Plan a shoot around the light</h2>
+      <p>Pick a day, a place and a session. The planner suggests a start time inside golden hour and gives you a calendar file to keep it.</p>
+    </div>
+    <div class="plan-grid">
+      <form class="card plan-form" id="plan-form">
+        <label>Date
+          <input type="date" id="plan-date" required>
+        </label>
+        <label>Place
+          <select id="plan-place"></select>
+        </label>
+        <label>Session
+          <select id="plan-session">
+            <option value="portrait">Portrait — 60–90 min</option>
+            <option value="walk">Photo walk — 90 min</option>
+            <option value="collab">Collab shoot — 60–120 min</option>
+          </select>
+        </label>
+        <label>Light you want
+          <select id="plan-window">
+            <option value="evening">Evening golden hour (recommended)</option>
+            <option value="morning">Morning golden hour</option>
+            <option value="blue-evening">Blue hour after sunset</option>
+            <option value="blue-morning">Blue hour before sunrise</option>
+          </select>
+        </label>
+        <button class="btn" type="submit">Work out my shoot time</button>
+      </form>
+      <div class="card plan-result" id="plan-result" hidden>
+        <p class="card-label">Your shoot</p>
+        <h3 id="plan-title">—</h3>
+        <p class="muted" id="plan-detail">—</p>
+        <p id="plan-light">—</p>
+        <div class="plan-actions">
+          <button class="btn small" id="download-ics" type="button">Add to calendar (.ics)</button>
+          <button class="btn small ghost" id="save-plan" type="button">Save this plan</button>
+        </div>
+        <p class="fineprint">Saving keeps the plan in this browser only. To book it with Phil, use the <a href="https://claireaicodes.github.io/philmography-shoot-tracker/#book">Philmography booking form</a> — it emails him a calendar invite.</p>
+      </div>
+    </div>
+
+    <div id="saved-plans-wrap" hidden>
+      <h3>Saved plans</h3>
+      <ul class="saved-plans" id="saved-plans"></ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="tips-h">
+    <div class="section-head">
+      <p class="kicker">Field notes</p>
+      <h2 id="tips-h">Shooting Singapore light</h2>
+    </div>
+    <div class="tips">
+      <div class="tip"><h3>Golden hour is short here</h3><p>Near the equator the sun drops fast — golden hour lasts roughly 40 minutes, not the hour-plus you get further north. Arrive 15 minutes early and be shooting when it starts.</p></div>
+      <div class="tip"><h3>A little cloud is a gift</h3><p>Thin cloud at sunset catches colour you never get from a clear sky. Heavy grey cloud kills it. The outlook score above weighs cloud cover against rain risk for exactly this reason.</p></div>
+      <div class="tip"><h3>Mornings are calmer</h3><p>Singapore mornings are usually clearer and the streets are quieter — better for portraits in busy spots like Haji Lane or Chinatown. Evenings give you the warmer, longer shadows.</p></div>
+      <div class="tip"><h3>Rain is a plan, not a cancellation</h3><p>Showers pass in 20–30 minutes. Sheltered spots — MRT underpasses, five-foot ways, Jewel — keep a shoot alive, and wet streets reflect beautifully right after.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Philmography</b> — casual portrait &amp; street photography in Singapore, by Phil.</p>
+    <p class="muted">Golden Hour Planner · Sun times computed in-browser (NOAA algorithm) for Singapore 1.3521° N, 103.8198° E · Weather: Open-Meteo · <a href="https://claireaicodes.github.io/philmography-shoot-tracker/">Book a free shoot</a> · <a href="https://www.instagram.com/philmography.photo/">@philmography.photo</a></p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
