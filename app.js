@@ -134,24 +134,27 @@
     // Best window: evening golden by default; morning if it is before noon and evening is rained off (weather updates later)
     setBestWindow('evening');
 
-    // Timeline
-    var pts = [0,
-      todayTimes.blueAm[0], todayTimes.blueAm[1],
-      todayTimes.goldenAm[1],
-      todayTimes.goldenPm[0],
-      todayTimes.bluePm[1], 1440];
-    var kinds = ['night', 'blue', 'golden', 'day', 'golden', 'blue', 'night'];
+    // Timeline: explicit [start, end, kind] segments covering the whole day
+    var segs = [
+      [0, todayTimes.blueAm[0], 'night'],
+      [todayTimes.blueAm[0], todayTimes.blueAm[1], 'blue'],
+      [todayTimes.goldenAm[0], todayTimes.goldenAm[1], 'golden'],
+      [todayTimes.goldenAm[1], todayTimes.goldenPm[0], 'day'],
+      [todayTimes.goldenPm[0], todayTimes.goldenPm[1], 'golden'],
+      [todayTimes.bluePm[0], todayTimes.bluePm[1], 'blue'],
+      [todayTimes.bluePm[1], 1440, 'night']
+    ];
     var tl = $('timeline');
     tl.innerHTML = '';
-    for (var i = 0; i < kinds.length; i++) {
-      var w = (pts[i + 1] - pts[i]) / 1440 * 100;
-      if (w <= 0) continue;
+    segs.forEach(function (s) {
+      var w = (s[1] - s[0]) / 1440 * 100;
+      if (!(w > 0)) return;
       var seg = document.createElement('div');
-      seg.className = 'seg ' + kinds[i];
+      seg.className = 'seg ' + s[2];
       seg.style.width = w + '%';
-      seg.title = kinds[i] + ' ' + fmt(pts[i]) + ' – ' + fmt(pts[i + 1]);
+      seg.title = s[2] + ' ' + fmt(s[0]) + ' – ' + fmt(s[1]);
       tl.appendChild(seg);
-    }
+    });
     var nowParts = sgtDateParts(new Date());
     var nowMin = new Date().getUTCHours() * 60 + new Date().getUTCMinutes() + TZ * 60;
     nowMin = ((nowMin % 1440) + 1440) % 1440;
